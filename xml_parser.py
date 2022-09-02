@@ -23,7 +23,7 @@ def timefunc(func):
     return time_closure
 
 
-def get_usd_course_from_xml_string(xml_string):
+def usd_course_from_cbr_xml_string(xml_string):
     tree = ET.ElementTree(ET.fromstring(xml_string))
     root = tree.getroot()
     for item in root.findall('Valute'):
