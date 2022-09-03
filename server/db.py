@@ -29,7 +29,6 @@ def try_connection(func):
             if connection:
                 connection.close()
                 print("Connection closed")
-
     return wrapper
 
 
@@ -52,7 +51,34 @@ def create_table(cursor):
     )
 
 
-def create_web_sites_fast(func):
+@try_connection
+def create_psql_view(cursor):
+    cursor.execute(
+        """CREATE VIEW domains AS 
+        SELECT url, usd_course
+        FROM web_sites
+        """
+    )
+
+def get_web_site_by_hash(hash):
+    conn=get_connection()
+    with conn.cursor() as cursor:
+        cursor.execute("""
+        SELECT * FROM web_sites WHERE hash='{0}';
+        """.format(hash))
+        data=cursor.fetchall()[0]
+    if conn:
+        cursor.close()
+        conn.close()
+    return {
+        'id': data[0],
+        'hash': data[1],
+        'includeTime': data[2],
+        'usd_course': data[3],
+        'url': data[4]
+    }
+
+def create_web_sites(func):
     connection = get_connection()
     with connection.cursor() as cursor:
         dataText = ','.join(cursor.mogrify('(%s,%s,%s,%s)', row).decode("utf-8") for row in func())
@@ -62,3 +88,4 @@ def create_web_sites_fast(func):
         cursor.close()
         connection.close()
 
+print(int('1BB8B7F8A6F86C992D8F8982244C5A42',16))
