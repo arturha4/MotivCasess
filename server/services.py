@@ -2,7 +2,7 @@ import xml.etree.ElementTree as ET
 from datetime import datetime as dt
 import requests
 
-from cfg import USD_UNICODE
+from cfg import USD_UNICODE, VALUTE
 
 
 def usd_course_from_cbr_xml_string(xml_string):
@@ -44,7 +44,7 @@ def get_usd_from_usd_daily(date: tuple) -> tuple:
     try:
         parsed_date = str(dt.fromordinal(date[0])).split(' ')[0].split('-')
         usd_course = requests.get('https://www.cbr-xml-daily.ru/archive/{0}/{1}/{2}/daily_json.js'
-                                  .format(parsed_date[0], parsed_date[1], parsed_date[2])).json()['Valute']['USD'][
+                                  .format(parsed_date[0], parsed_date[1], parsed_date[2])).json()['Valute'][VALUTE][
             'Value']
         return (date[0], usd_course)
     except:

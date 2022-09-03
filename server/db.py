@@ -29,6 +29,7 @@ def try_connection(func):
             if connection:
                 connection.close()
                 print("Connection closed")
+
     return wrapper
 
 
@@ -60,13 +61,14 @@ def create_psql_view(cursor):
         """
     )
 
+
 def get_web_site_by_hash(hash):
-    conn=get_connection()
+    conn = get_connection()
     with conn.cursor() as cursor:
         cursor.execute("""
         SELECT * FROM web_sites WHERE hash='{0}';
         """.format(hash))
-        data=cursor.fetchall()[0]
+        data = cursor.fetchall()[0]
     if conn:
         cursor.close()
         conn.close()
@@ -78,6 +80,7 @@ def get_web_site_by_hash(hash):
         'url': data[4]
     }
 
+
 def create_web_sites(func):
     connection = get_connection()
     with connection.cursor() as cursor:
@@ -87,5 +90,3 @@ def create_web_sites(func):
     if connection:
         cursor.close()
         connection.close()
-
-print(int('1BB8B7F8A6F86C992D8F8982244C5A42',16))
